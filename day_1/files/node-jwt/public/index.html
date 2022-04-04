@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<style>
+			.invisible {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<h2>Вход</h2>
+			<div class="login">
+				<div class="row">
+					<input type="text" id="login" placeholder="Логин" />
+				</div>
+				<div class="row">
+					<input type="password" id="password" placeholder="" />
+				</div>
+				<div class="row">
+					<input type="button" id="btnLogin" value="Войти" onclick="fn()" />
+				</div>
+			</div>
+		</div>
+		<div id="result"></div>
+		<script>
+			function fn() {
+				fetch('/api/auth', {
+					// credentials: 'include',
+					method: 'POST',
+					mode: 'cors',
+					url: `http://127.0.0.1:3000`,
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						login: login.value,
+						password: password.value,
+					}),
+				})
+					.then(body => body.json())
+					.then(body => (result.innerHTML = JSON.stringify(body, null, ' ')))
+				console.log(
+					JSON.stringify({ login: login.value, password: password.value })
+				)
+			}
+		</script>
+	</body>
+</html>

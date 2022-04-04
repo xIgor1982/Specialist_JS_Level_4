@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Работа с токен</title>
+	</head>
+	<body>
+		<form action="">
+			<div class="row">
+				<input type="text" name="login" id="login" />
+			</div>
+			<div class="row">
+				<input type="password" name="password" id="password" />
+			</div>
+			<div class="row">
+				<input type="button" value="Войти" onclick="fn()" />
+			</div>
+		</form>
+		<pre id="result"></pre>
+		<script>
+			function fn() {
+				fetch('/api/auth', {
+					url: `http://127.0.0.1:3000`,
+					method: 'POST',
+					mode: 'cors',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						login: login.value,
+						password: password.value,
+					}),
+				})
+					.then(res => res.json())
+					.then(body => {
+						result.innerHTML = JSON.stringify(body, null, ' ')
+					})
+				console.log(
+					JSON.stringify({ login: login.value, password: password.value })
+				)
+			}
+		</script>
+	</body>
+</html>

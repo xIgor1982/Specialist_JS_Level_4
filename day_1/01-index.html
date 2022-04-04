@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<!-- Обязательные метатеги -->
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<!-- Bootstrap CSS -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+			crossorigin="anonymous"
+		/>
+
+		<title>Hello, world!</title>
+	</head>
+	<body>
+		<h1>Первые Ajax-запросы</h1>
+		<div class="container">
+			<div class="row">
+				<h1>Первые Ajax-запросы</h1>
+
+				<section>
+					<h3>XMLHttpRequest</h3>
+					<a href="#" class="btn btn-primary" onclick="fn1()"
+						>Запрос - XMLHttpRequest</a
+					>
+					<p id="result1"></p>
+
+					<script>
+						function fn1() {
+							let xhr = new XMLHttpRequest()
+							xhr.onreadystatechange = () => {
+								console.log(`Состояние: ${xhr.readyState}`)
+								if (xhr.readyState === 4) {
+									console.log(`Статус: ${xhr.status}`)
+									if (xhr.status === 200) {
+										console.log(`Тип ответа: ${xhr.responseType}`)
+										console.log(`Ответ: ${xhr.responseText}`)
+
+										const data = JSON.parse(xhr.responseText)
+										console.log('Ответ json:', data)
+
+										result1.innerHTML = ''
+										data.forEach(item => {
+											console.log(item)
+											result1.innerHTML += `
+											<div class="card bg-light mb-3 mt-3" style="max-width: 100%;">
+													<div class="card-header">${item.name} ${item.username}</div>
+													<div class="card-body">
+														<h5 class="card-title">${item.name} ${item.username}</h5>
+														<p class="card-text">Email: ${item.email}</p>
+														<p class="card-text">Phone: ${item.phone}</p>
+														<p class="card-text">Website: ${item.website}</p>
+													</div>
+											</div>
+
+											`
+										})
+									}
+								}
+							}
+							xhr.open('GET', '00-test.json', true)
+							xhr.send(null)
+						}
+					</script>
+				</section>
+
+				<section>
+					<h3>Fetch API</h3>
+					<a href="#" class="btn btn-primary" onclick="fn2()">Запрос - Fetch</a>
+					<p id="result2"></p>
+					<script>
+						function fn2() {
+							fetch('00-test.json')
+								.then(res => {
+									console.log('Объект ответ:', res)
+									return res.json()
+								})
+								.then(data => {
+									result2.innerHTML = ''
+									data.forEach(item => {
+										console.log(item)
+										result2.innerHTML += `
+											<div class="card bg-light mb-3 mt-3" style="max-width: 100%;">
+													<div class="card-header">${item.name} ${item.username}</div>
+													<div class="card-body">
+														<h5 class="card-title">${item.name} ${item.username}</h5>
+														<p class="card-text">Email: ${item.email}</p>
+														<p class="card-text">Phone: ${item.phone}</p>
+														<p class="card-text">Website: ${item.website}</p>
+													</div>
+											</div>
+
+											`
+									})
+								})
+								.catch(err => {
+									console.log(err)
+								})
+						}
+					</script>
+				</section>
+			</div>
+		</div>
+
+
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+			crossorigin="anonymous"
+		></script>
+	</body>
+</html>
