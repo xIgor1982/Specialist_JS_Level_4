@@ -21,212 +21,366 @@
 				<h1>Работа JSON-сервера</h1>
 			</div>
 		</div>
-<hr />
-			<section class="container">
-				<h3 class="text-center">XMLHttpRequest</h3>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='xhrGETPost();false;'
-				>
-					GET /posts
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='xhrGETPost(1); false;'
-				>
-					GET /posts/1
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='xhrGETComments(); false;'
-				>
-					GET /comments
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='xhrGETComments(1); false;'
-				>
-					GET /comments/1
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='xhrGETProfile(); false;'
-				>
-					GET /profile
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='xhrPOSTPosts(); false;'
-				>
-					POST /posts
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='xhrPATCHPosts(); false'
-				>
-					PATCH /posts/1
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='xhrDELETEPosts(1); false'
-				>
-					DELETE /posts/1
-				</a>
-				<h4>Результаты</h4>
-				<pre id="result1"></pre>	
-				<script>
-					const url = 'http://localhost:3000'
-					
-					function xhrGETPost(id = null){
-						let xhr = new XMLHttpRequest()
-						xhr.open('GET', url+'posts/' +(id ? id : ''), true)
-						xhr.setRequestHeader('Content-Type', 'application/json')
-						xhr.send(null)
+		<hr />
+		<section class="container">
+			<h3 class="text-center">XMLHttpRequest</h3>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='xhrGETPost();false;'
+			>
+				GET /posts
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='xhrGETPost(1); false;'
+			>
+				GET /posts/1
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='xhrGETComments(); false;'
+			>
+				GET /comments
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='xhrGETComments(1); false;'
+			>
+				GET /comments/1
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='xhrGETProfile(); false;'
+			>
+				GET /profile
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='xhrPOSTPosts("Название 3", "Автор 3", 3000); false;'
+			>
+				POST /posts
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='xhrPATCHPosts({id: 2, author: "Автор 2 - new", price: "Название 2 - new", price: 2250, title: "Название 2 - new"}); false'
+			>
+				PATCH /posts/2
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='xhrDELETEPosts(3); false'
+			>
+				DELETE /posts/3
+			</a>
+			<h4>Результаты</h4>
+			<pre id="result1"></pre>	
+			<script>
+				const url = 'http://localhost:3000/'
+				const patchResult = document.querySelector('#result1')
 
-						xhr.onreadystatechange = () => {
-							if(xhr.readyState === 4) {
-								if([200, 201].includes(xhr.status)){
-									result1.innerHTML = ''
-									result1.innerHTML = JSON.stringify(
-										JSON.parse(xhr.responseText),
-										null,
-										' '
-										) 
-								}
+				const requestXHR = (method, patch, patchResult, data = null) => {
+					let xhr = new XMLHttpRequest()
+					xhr.open(method, url + patch, true)
+					xhr.setRequestHeader('Content-Type', 'application/json')
+					if(data) {
+						xhr.send(data)
+					} else {
+						xhr.send(null)
+					}						
+
+					xhr.onreadystatechange = () => {
+						if(xhr.readyState === 4) {
+							if([200, 201].includes(xhr.status)){
+								patchResult.innerHTML = JSON.stringify(
+									JSON.parse(xhr.responseText),
+									null,
+									' '
+									) 
 							}
 						}
 					}
+				}
 
-					function xhrGETComments(){
+				function xhrGETPost(id = ''){
+					requestXHR('GET', `posts/${id}`, patchResult)
+				}
 
+				function xhrGETComments(id = ''){
+					requestXHR('GET', `comments/${id}`, patchResult)
+				}
+
+				function xhrGETProfile(){
+					requestXHR('GET', `profile/`, patchResult)			
+				}
+
+				function xhrPOSTPosts(title, author, price){
+					requestXHR('POST', `posts/`, patchResult, JSON.stringify({title, author, price}))
+				}
+
+				function xhrPATCHPosts({id, title, author, price}){
+					requestXHR('PATCH', `posts/${id}`, patchResult, JSON.stringify({title, author, price}))	
+				}
+
+				function xhrDELETEPosts(id){
+					requestXHR('DELETE', `posts/${id}`, patchResult)
+				}
+			</script>			
+		</section>
+		<hr />
+		<section class="container">
+			<h3 class="text-center">Fetch API</h3>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='fetchGETPost(); false;'
+			>
+				GET /posts
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='fetchGETPost(1); false;'
+			>
+				GET /posts/1
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='fetchGETComments(); false;'
+			>
+				GET /comments
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='fetchGETComments(1); false;'
+			>
+				GET /comments/1
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='fetchGETProfile(); false;'
+			>
+				GET /profile
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='fetchPOSTPosts("Название 3", "Автор 3", 3000); false;'
+			>
+				POST /posts
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='fetchPATCHPosts({id: 2, author: "Автор 2 - new", price: "Название 2 - new", price: 2250, title: "Название 2 - new"}); false'
+			>
+				PATCH /posts/2
+			</a>
+			<a 
+				href="#" 
+				class="btn btn-primary m-2" 
+				onclick='fetchDELETEPosts(3); false'
+			>
+				DELETE /posts/3
+			</a>
+			<h4>Результаты</h4>
+			<pre id="result2"></pre>
+			<script>
+				const patchResultFetch = document.querySelector('#result2')	
+				const options = {
+						headers: {
+							'Content-Type': 'application/json',
+							'Accept': 'application/json'
+						},
 					}
 
-					function xhrGETComments(id){
+				const requestFetch = (patch, selector = patchResultFetch) => {
+					const result = fetch(patch, opt = options)
+						.then(body => body.json())
+						.then(body => {
+							selector.innerHTML = JSON.stringify(body, null, ' ')
+						})
+				}
 
-					}
+				async function fetchGETPost(id = ''){
+					const res = await requestFetch(`${url}posts/${id}`)
+					patchResultFetch.innerHTML = JSON.stringify(res, null, ' ')
+				}
 
-					function xhrGETProfile(){
+				function fetchGETComments(id = ''){
+					requestFetch(`${url}comments/${id}`)
+				}
 
-					}
+				function fetchGETProfile(){
+					requestFetch(`${url}profile/`)
+				}
 
-					function xhrPOSTPosts(){
+				function fetchPOSTPosts(title, author, price){
+					options.method = 'POST'
+					options.body = JSON.stringify({title, author, price})						
 
-					}
+					requestFetch(`${url}posts/`, options)
+				}
 
-					function xhrPATCHPosts(){
+				function fetchPATCHPosts({id, title, author, price}){
+					options.method = 'PATCH'
+					options.body = JSON.stringify({title, author, price})	
 
-					}
+					requestFetch(`${url}posts/${id}`, options)
+				}
 
-					function xhrDELETEPosts(id){
+				function fetchDELETEPosts(id){
+					options.method = 'DELETE'
 
-					}
-				</script>			
-			</section>
-			<hr />
-			<section class="container">
-				<h3 class="text-center">Fetch API</h3>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='fetchGETPost(); false;'
-				>
-					GET /posts
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='fetchGETPost(1); false;'
-				>
-					GET /posts/1
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='fetchGETComments(); false;'
-				>
-					GET /comments
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='fetchGETComments(1); false;'
-				>
-					GET /comments/1
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='fetchGETProfile(); false;'
-				>
-					GET /profile
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='fetchPOSTPosts(); false;'
-				>
-					POST /posts
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='fetchPATCHPosts(); false'
-				>
-					PATCH /posts/1
-				</a>
-				<a 
-					href="#" 
-					class="btn btn-primary m-2" 
-					onclick='fetchDELETEPosts(1); false'
-				>
-					DELETE /posts/1
-				</a>
-				<h4>Результаты</h4>
-				<div id="result2"></div>
+					requestFetch(`${url}posts/${id}`, options)
+				}
+			</script>	
+		</section>
+	<hr />	
+
+	<section>
+		<div class="container">
+			<div class="row">
+				<h4 class='text-center'>Поиск книги по названию</h4>
+				<form>
+					<div class="row">
+							<input 
+								type="text" 
+								placeholder='Введите название книги' 
+								class='mb-1' 
+								id='titleBook' 
+								onkeyup='searchBookByID(titleBook.value)'
+							>							
+					</div>
+
+				</form>
+				<div class="post" id='resultSearch'></div>
 				<script>
-					function fetchGETPost(){
+					async function searchBookByID(title) {
+						if(!title) return
 
+						console.log('поиск =>', url+'posts/?q='+title)
+						let books = await fetch(url+'posts/?q='+title)
+						.then(body => body.json())
+
+						resultSearch.innerHTML = ''
+
+						books.forEach(book => {
+							resultSearch.innerHTML += `
+								${book.id} ${book.title} ${book.author} ${book.price}
+								<hr />
+							`
+						})						
 					}
-
-					function fetchGETPost(id){
-
-					}
-
-					function fetchGETComments(){
-
-					}
-
-					function fetchGETComments(id){
-
-					}
-
-					function fetchGETProfile(){
-
-					}
-
-					function fetchPOSTPosts(){
-
-					}
-
-					function fetchPATCHPosts(){
-
-					}
-
-					function fetchDELETEPosts(id){
-
+				</script>				
+			</div>
+		</div>
+	</section>
+	<section>
+		<div class="container">
+			<div class="row">
+				<h4 class='text-center'>Добавление паста</h4>
+				<form>
+					<div class="row">
+						<input type="text" placeholder='Автор книги' class='mb-1' id='createAuthor'>	
+						<input type="text" placeholder='Название книги' class='mb-1' id='createTitle'>	
+						<input type="text" placeholder='Цена книги' class='mb-1' id='createPrice'>	
+						<input class='btn btn-primary' type="button" value='Добавить книгу' onclick='addBook(
+							createAuthor.value, 
+							createTitle.value, 
+							createPrice.value 
+						)'>
+					</div>					
+				</form>
+				<script>
+					function addBook(author, title, price) {
+						fetchPOSTPosts(title, author, price)
 					}
 				</script>	
-			</section>
+			</div>
 		</div>
-<hr />
+	</section>
+	<section>
+		<div class="container">
+			<div class="row">
+				<h4 class='text-center'>Все книги базы</h4>
+				<table id='posts' width='100%' border='1'>
+					<tr>
+						<th>Название</th>
+						<th>Автор</th>
+						<th>Цена</th>
+						<th></th>
+					</tr>
+					<td>Название 1</td>
+					<td>Автор 1</td>
+					<td>Цена</td>
+					<td>
+						<a href="#" class='btn btn-primary'>Удалить</a>
+					</td>
+				</table>
+			</div>
+		</div>
+		<script>
+			async function getAllBooksTableFetch() {
+				const result = await fetch(url+'posts/')
+				.then(body => body.json())
+				// console.log(result)
+				return result
+			}
+
+			async function showAllBooksTable(selector) {
+				const table = document.querySelector(selector)
+				const tr = table.getElementsByTagName('tr')
+				for(let i = 1; i < tr.length; i++){
+					tr[i].remove()
+				}
+				// for(let i = tr.length - 1; i > 0; i--){
+				// 	tr[i].remove()
+				// }
+				const posts = await getAllBooksTableFetch()
+				posts.forEach(item => {
+					const tr = document.createElement('tr')
+					let td
+
+					td = document.createElement('td')
+					td.innerHTML = item.title
+					tr.appendChild(td)
+
+					td = document.createElement('td')
+					td.innerHTML = item.author
+					tr.appendChild(td)
+
+					td = document.createElement('td')
+					td.innerHTML = item.price
+					tr.appendChild(td)
+
+					td = document.createElement('td')
+					let btnDelete = document.createElement('button')
+					btnDelete.className = 'btn btn-primary'
+					btnDelete.innerHTML = 'Удалить'
+					btnDelete.setAttribute('data-id', item.id)
+					btnDelete.addEventListener('click', (ev)=>{
+						fetchDELETEPosts(ev.target.getAttribute('data-id'))
+					})
+					tr.appendChild(btnDelete)
+
+					table.appendChild(tr)
+				})
+			}
+			showAllBooksTable('#posts')
+		</script>
+	</section>
+	<hr />
 		<script
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
 			integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
