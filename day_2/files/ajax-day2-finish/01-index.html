@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Базовый пример</title>
+</head>
+<body>
+  <h1>Базовый пример</h1>
+  <button>Нажать</button>
+  <script>
+    let button = document.querySelector('button');
+
+    button.onclick = handleClick;
+    //button.addEventListener('click',handleClick);
+
+/*  функция выполняет асинхронный запрос, получая тело самой текущей страницы */
+    function handleClick(ev){
+      let target = ev.target || ev.srcElement;
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET',location.href, true);
+      xhr.send(null);
+
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState == 4){
+          //полезная работа
+          if(xhr.status == 200){
+            console.log(xhr.responseText);
+          }
+        } else {
+          //альтернативным вариантов
+        }
+      }
+    }
+  </script>
+</body>
+</html>

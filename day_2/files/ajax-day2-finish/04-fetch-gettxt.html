@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Получение текста</title>
+</head>
+<body>
+  <h1>Получение текста</h1>
+  <button>Нажать</button>
+  <script>
+    let button = document.querySelector('button');
+
+    button.onclick = handleClick;
+    //button.addEventListener('click',handleClick);
+
+/*  функция выполняет асинхронный запрос, получая содержимое файла 03.txt */
+    function handleClick(ev){
+      let target = ev.target || ev.srcElement;
+      fetch('http://mysite.local/03.txt')
+        .then( response => {
+          response.text().then(txt => console.log(txt))
+        });
+
+    }
+  </script>
+</body>
+</html>
+

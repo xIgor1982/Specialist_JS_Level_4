@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <title>POST отправка данных</title>
+</head>
+<body>
+  <h1>POST отправка данных</h1>
+  <form 
+    method=POST
+    action="09-post.php"
+    enctype="application/x-www-form-urlencoded"
+    >    
+    <input type=hidden name=secret value=12345 />
+    <input name=param  />
+    <input type=submit  />
+  </form>
+  <hr>
+  <button class="btn btn-success">Нажать</button>
+
+  <div id="result"></div>
+  <script>
+    let button = document.querySelector('button');
+
+    button.onclick = handleClick;
+
+    function handleClick(ev){
+      let target = ev.target || ev.srcElement;
+      let xhr = new XMLHttpRequest();
+      let result = document.querySelector('#result');
+      xhr.open('POST','09-post.php', true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      let secret = 12345;
+
+      xhr.send(`secret=${secret}&param=John`);
+
+      xhr.onreadystatechange = () => {
+        if(xhr.readyState == 4){
+          if(xhr.status == 200){
+            result.innerHTML += `${xhr.responseText}<hr/>`       
+          }
+         result.innerHTML += `<pre>${xhr.getAllResponseHeaders()}</pre>`
+         result.innerHTML += `<pre>${xhr.getResponseHeader('Content-Type')}</pre>`
+         result.innerHTML += `content-length: ${xhr.getResponseHeader('Content-Length')}<br />`
+        }
+      }
+    }
+  </script>
+</body>
+</html>

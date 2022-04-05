@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<!-- Обязательные метатеги -->
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<!-- Bootstrap CSS -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+			crossorigin="anonymous"
+		/>
+
+		<title>Работа JSON-сервера!</title>
+	</head>
+	<body>
+		<div class="container">
+			<div class="text-center">
+				<h1>Работа JSON-сервера</h1>
+			</div>
+		</div>
+<hr />
+			<section class="container">
+				<h3 class="text-center">XMLHttpRequest</h3>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='xhrGETPost();false;'
+				>
+					GET /posts
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='xhrGETPost(1); false;'
+				>
+					GET /posts/1
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='xhrGETComments(); false;'
+				>
+					GET /comments
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='xhrGETComments(1); false;'
+				>
+					GET /comments/1
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='xhrGETProfile(); false;'
+				>
+					GET /profile
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='xhrPOSTPosts(); false;'
+				>
+					POST /posts
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='xhrPATCHPosts(); false'
+				>
+					PATCH /posts/1
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='xhrDELETEPosts(1); false'
+				>
+					DELETE /posts/1
+				</a>
+				<h4>Результаты</h4>
+				<pre id="result1"></pre>	
+				<script>
+					const url = 'http://localhost:3000'
+					
+					function xhrGETPost(id = null){
+						let xhr = new XMLHttpRequest()
+						xhr.open('GET', url+'posts/' +(id ? id : ''), true)
+						xhr.setRequestHeader('Content-Type', 'application/json')
+						xhr.send(null)
+
+						xhr.onreadystatechange = () => {
+							if(xhr.readyState === 4) {
+								if([200, 201].includes(xhr.status)){
+									result1.innerHTML = ''
+									result1.innerHTML = JSON.stringify(
+										JSON.parse(xhr.responseText),
+										null,
+										' '
+										) 
+								}
+							}
+						}
+					}
+
+					function xhrGETComments(){
+
+					}
+
+					function xhrGETComments(id){
+
+					}
+
+					function xhrGETProfile(){
+
+					}
+
+					function xhrPOSTPosts(){
+
+					}
+
+					function xhrPATCHPosts(){
+
+					}
+
+					function xhrDELETEPosts(id){
+
+					}
+				</script>			
+			</section>
+			<hr />
+			<section class="container">
+				<h3 class="text-center">Fetch API</h3>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='fetchGETPost(); false;'
+				>
+					GET /posts
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='fetchGETPost(1); false;'
+				>
+					GET /posts/1
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='fetchGETComments(); false;'
+				>
+					GET /comments
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='fetchGETComments(1); false;'
+				>
+					GET /comments/1
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='fetchGETProfile(); false;'
+				>
+					GET /profile
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='fetchPOSTPosts(); false;'
+				>
+					POST /posts
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='fetchPATCHPosts(); false'
+				>
+					PATCH /posts/1
+				</a>
+				<a 
+					href="#" 
+					class="btn btn-primary m-2" 
+					onclick='fetchDELETEPosts(1); false'
+				>
+					DELETE /posts/1
+				</a>
+				<h4>Результаты</h4>
+				<div id="result2"></div>
+				<script>
+					function fetchGETPost(){
+
+					}
+
+					function fetchGETPost(id){
+
+					}
+
+					function fetchGETComments(){
+
+					}
+
+					function fetchGETComments(id){
+
+					}
+
+					function fetchGETProfile(){
+
+					}
+
+					function fetchPOSTPosts(){
+
+					}
+
+					function fetchPATCHPosts(){
+
+					}
+
+					function fetchDELETEPosts(id){
+
+					}
+				</script>	
+			</section>
+		</div>
+<hr />
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+			crossorigin="anonymous"
+		></script>
+	</body>
+</html>

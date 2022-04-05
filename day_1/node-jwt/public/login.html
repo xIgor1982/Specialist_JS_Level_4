@@ -19,15 +19,32 @@
 			</div>
 		</form>
 		<pre id="result"></pre>
+
+		<section>
+			<h3>Запрос</h3>
+			<div class="row">
+				<input
+					type="text"
+					id="jwt-token"
+					placeholder="Введите токен"
+					autocomplete="off"
+				/>
+			</div>
+			<div class="row">
+				<input type="button" id="ntn-user" value="/user" onclick="user()" />
+			</div>
+			<pre id="result2"></pre>
+		</section>
+
 		<script>
 			function fn() {
 				fetch('/api/auth', {
 					url: `http://127.0.0.1:3000`,
 					method: 'POST',
 					mode: 'cors',
-					headers: {
-						Accept: 'application/json',
+					headers: {						
 						'Content-Type': 'application/json',
+						'Accept': 'application/json',
 					},
 					body: JSON.stringify({
 						login: login.value,
@@ -37,10 +54,37 @@
 					.then(res => res.json())
 					.then(body => {
 						result.innerHTML = JSON.stringify(body, null, ' ')
+
+						if(body.token) {
+							localStorage.setItem('token', body.token)
+						}
 					})
 				console.log(
 					JSON.stringify({ login: login.value, password: password.value })
 				)
+			}
+
+			function user() {
+				// const jwtToken = document.querySelector('#jwt-token').value
+				const jwtToken = localStorage.getItem('token')
+				if(!jwtToken) return
+
+				fetch('/user', {
+					method: 'GET',
+					mode: 'cors',
+					url: 'http://127.0.0.1:3000',
+					headers: {						
+						'Content-Type': 'application/json',
+						'Accept': 'application/json',
+						'Authorization' : 'Bearer ' + jwtToken
+					},
+
+
+				})
+					.then(body => body.json())
+					.then(body => {
+						result2.innerHTML = JSON.stringify(body, null, ' ')
+					})
 			}
 		</script>
 	</body>

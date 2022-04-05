@@ -1,0 +1,8 @@
+{
+  "name": "Василий",
+  "age": 25,
+  "flag": true,
+  "arr": [ "qwerty", "ytrewq", 34 ],
+  "str": "строка"
+}
+
