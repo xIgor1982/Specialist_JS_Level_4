@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<!-- Обязательные метатеги -->
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<!-- Bootstrap CSS -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+			crossorigin="anonymous"
+		/>
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+			crossorigin="anonymous"
+		></script>
+
+		<title>XML - ответ</title>
+	</head>
+	<body>
+		<h1 class='text-center'>XML - ответ</h1>
+
+		<hr />
+
+		<div class="container">
+			<div class="row">
+				<div class='col'>
+					<input
+						type="button"
+						value="07-xml.xml"
+						id="xml07"
+						class="btn btn-primary"
+					/>
+				</div>
+				
+				<div class='col'>
+					<input
+						type="Получить XML"
+						value="Курсы валют"
+						id="day"
+						class="btn btn-primary"
+					/>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="container">
+			<div class="row">
+				<h4>Результат</h4>
+				<pre id="result"></pre>
+			</div>
+		</div>
+
+		<script>
+			const url = '07-xml.xml'
+			const arr = [
+				document.querySelector('#xml07'),
+				document.querySelector('#day'),
+			]
+
+			arr.forEach(item => {
+				item.addEventListener('click', e => {
+					e.preventDefault()
+					switch (e.target.id) {
+						case 'xml07':
+							fn1()
+							break
+						case 'day':
+							fn2()
+							break
+					}
+				})
+			})
+
+			function fn1(method = 'GET', data = null) {
+				// console.log('fn1')
+				let xhr = new XMLHttpRequest()
+
+				xhr.open(method, url, true)
+				xhr.responseType = "document"
+				xhr.overrideMimeType("text/xml")
+				xhr.send(null)
+
+				xhr.onreadystatechange = () => {
+					if (xhr.readyState === 4) {
+						if ([200, 201].includes(xhr.status)) {
+							const greetingElement = xhr.responseXML.getElementsByTagName('greeting')[0]
+							const messageElement = greetingElement.getElementsByTagName('message')[0]
+							const resultText = messageElement.firstChild.nodeValue	
+							result.innerHTML = resultText
+						}
+					}
+				}
+			}
+
+			function fn2() {
+				// console.log('fn2')
+				let xhr = new XMLHttpRequest()
+
+				xhr.open('GET', 'XML_daily.xml', true)
+				xhr.responseType = "document"
+				xhr.overrideMimeType("text/xml")
+				xhr.send(null)
+
+				xhr.onreadystatechange = () => {
+					if (xhr.readyState === 4) {
+						if ([200, 201].includes(xhr.status)) {
+							const ValCurs = xhr.responseXML.getElementsByTagName('ValCurs')[0]
+							const Valutes = ValCurs.getElementsByTagName('Valute')
+
+							const fragment = document.createDocumentFragment()
+							const table = document.createElement('table')
+							table.classList.add('table')
+							table.classList.add('table-bordered')
+							fragment.append(table)
+							const header = document.createElement('tr')
+							table.append(header)
+
+							const th = document.createElement('th')
+							th.innerHTML = 'Курс'
+							header.appendChild(th)
+
+							const th2 = document.createElement('th')
+							th2.innerHTML = 'Номинал'
+							header.appendChild(th2)
+
+							const th3 = document.createElement('th')
+							th3.innerHTML = 'Валюта'
+							header.appendChild(th3)
+
+							for(let i = 0; i < Valutes.length; i++){
+								const tr = document.createElement('tr')
+								table.append(tr)
+
+								const td1 = document.createElement('td')
+								td1.innerHTML = Valutes[i].getElementsByTagName('Value')[0].firstChild.nodeValue.replace(',', '.')
+								tr.appendChild(td1)
+
+								const td2 = document.createElement('td')
+								td2.innerHTML = Valutes[i].getElementsByTagName('Nominal')[0].firstChild.nodeValue
+								tr.appendChild(td2)
+
+								const td3 = document.createElement('td')
+								td3.innerHTML = Valutes[i].getElementsByTagName('Name')[0].firstChild.nodeValue
+								tr.appendChild(td3)
+							}
+
+							result.innerHTML = ''
+							result.appendChild(fragment)
+						}
+					}
+				}
+			}
+		</script>
+	</body>
+</html>
